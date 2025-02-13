@@ -26,8 +26,16 @@ function dump(o, tree)
     end
 end
 
-function printdump(o)
-    print(dump(o))
+function printdump(...)
+    local args = {...}
+    local output = ""
+    for i, value in pairs(args) do
+        output = output .. dump(value)
+        if i ~= #args then
+            output = output .. " "
+        end
+    end
+    print(output)
 end
 
 getgenv().printdump = printdump
