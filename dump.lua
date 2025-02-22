@@ -20,7 +20,7 @@ function dump(o, tree)
         end
         return s:sub(1, #s - 1 - i) .. '} '
     elseif type(o) == "string" then
-        return '"' ..tostring(o):gsub("[^a-zA-Z0-9%+%-*/=,./\\`~]", function(c)
+        return '"' ..tostring(o):gsub("[^a-zA-Z0-9%+%-*/=,./\\`~ ]", function(c)
             return "\\" .. string.byte(c)
         end):gsub("\\10", "\\n") .. '"'
     else
