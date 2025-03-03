@@ -7,7 +7,7 @@ function dump(o, tree)
         for k, v in pairs(o) do
             i = 1
             if type(k) ~= 'number' then
-                k = '"' .. k .. '"'
+                k = '"' .. dump(k, tree) .. '"'
             end
             if type(v) == "table" then
                 if table.find(tree, v) ~= nil then
