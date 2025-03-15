@@ -11,7 +11,7 @@ function dump(o, tree)
             end
             if type(v) == "table" then
                 if table.find(tree, v) ~= nil then
-                    v = "circular reference"
+                    v = "\"circular reference\""
                 else
                     tree[#tree + 1] = v
                 end
