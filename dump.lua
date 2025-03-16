@@ -1,3 +1,41 @@
+GetInstancePath = function(obj)
+	local path = ""
+	local curObj = obj
+	local formatLuaString = dump
+
+	while curObj do
+		if curObj == game then
+			path = "game" .. path
+			break
+		end
+
+		local className = curObj.ClassName
+		local curName = tostring(curObj)
+		local indexName
+		if string.match(curName, "^[%a_][%w_]*$") then
+			indexName = "." .. curName
+		else
+			local cleanName = formatLuaString(curName)
+			indexName = '[' .. cleanName .. ']'
+		end
+
+		local parObj = curObj.Parent
+		if parObj then
+			if parObj == game and className:find("Service") then
+				indexName = ':GetService("' .. className .. '")'
+			end
+		elseif parObj == nil then
+			local gotnil = 'getNil("%s", "%s")'
+			indexName = gotnil:format(curObj.Name, className)
+		end
+
+		path = indexName .. path
+		curObj = parObj
+	end
+
+	return path
+end
+
 function dump(o, tree)
     tree = tree or { o }
     if type(o) == 'table' then
@@ -23,8 +61,10 @@ function dump(o, tree)
         return '"' ..tostring(o):gsub("[^a-zA-Z0-9%+%-*/=,./`~ _-]", function(c)
             return "\\" .. string.byte(c)
         end):gsub("\\10", "\\n") .. '"'
+    elseif typeof(o) == "Instance" then
+        return GetInstancePath(o)
     else
-        return tostring(o)
+        return string.format('"%s"', tostring(o))
     end
 end
 
