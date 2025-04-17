@@ -63,6 +63,8 @@ function dump(o, tree)
         end):gsub("\\10", "\\n") .. '"'
     elseif typeof(o) == "Instance" then
         return GetInstancePath(o)
+	elseif typeof(o) == "number"
+		return tostring(o)
     else
         return string.format('"%s"', tostring(o))
     end
