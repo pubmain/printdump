@@ -42,7 +42,7 @@ function dump(o, tree)
         local s = '{ '
         -- local count = #tree
         local i = 0
-        for k, v in pairs(o) do
+        for k, v in o do
             i = 1
             if type(k) ~= 'number' then
                 k = tostring(dump(k, tree))
@@ -74,7 +74,7 @@ end
 function printdump(...)
     local args = {...}
     local output = ""
-    for i, value in pairs(args) do
+    for i, value in args do
         output = output .. dump(value)
         if i ~= #args then
             output = output .. " "
