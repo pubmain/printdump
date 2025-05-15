@@ -67,7 +67,7 @@ function dump(o, tree)
 	elseif typeof(o) == "number" then
 		return tostring(o)
     else
-        return string.format('%s', tostring(o))
+        return string.format('"%s (%s)"', tostring(o), typeof(o))
     end
 end
 
