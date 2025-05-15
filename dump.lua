@@ -66,6 +66,8 @@ function dump(o, tree)
         return GetInstancePath(o)
 	elseif typeof(o) == "number" then
 		return tostring(o)
+	elseif typeof(o) == "boolean" then
+		return tostring(o)
     else
         return string.format('"%s (%s)"', tostring(o), typeof(o))
     end
