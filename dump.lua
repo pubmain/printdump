@@ -68,6 +68,10 @@ function dump(o, tree)
 		return tostring(o)
 	elseif typeof(o) == "boolean" then
 		return tostring(o)
+    elseif typeof(o) == "Vector3" then
+        return string.format("Vector3.new(%d, %d, %d)", o.X, o.Y, o.Z)
+    elseif typeof(o) == "Vector2" then
+        return string.format("Vector2.new(%d, %d)", o.X, o.Y)
     else
         return string.format('"%s (%s)"', tostring(o), typeof(o))
     end
