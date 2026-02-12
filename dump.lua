@@ -93,6 +93,10 @@ end
 
 getgenv().printdump = printdump
 getgenv().dump = dump
+local _setclipboard = setclipboard
+getgenv().setclipboard = newcclosure(function(value)
+    _setclipboard(dump(value))
+end)
 
 return {
   printdump = printdump,
