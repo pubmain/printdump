@@ -67,11 +67,13 @@ function dump(o, tree)
 	elseif typeof(o) == "number" then
 		return tostring(o)
 	elseif typeof(o) == "boolean" then
-		return tostring(o)
+		return if o then "true" else "false"
     elseif typeof(o) == "Vector3" then
-        return string.format("Vector3.new(%d, %d, %d)", o.X, o.Y, o.Z)
+        return `Vector3.new({o.X}, {o.Y}, {o.Z})`
     elseif typeof(o) == "Vector2" then
-        return string.format("Vector2.new(%d, %d)", o.X, o.Y)
+        return `Vector2.new({o.X}, {o.Y})`
+    elseif typeof(o) == "CFrame" then
+        return `CFrame.new({dump(o.Position)}, {dump(o.Position + o.LookVector)})`
     else
         return string.format('"%s (%s)"', tostring(o), typeof(o))
     end
