@@ -95,7 +95,7 @@ getgenv().printdump = printdump
 getgenv().dump = dump
 local _setclipboard = setclipboard
 getgenv().setclipboard = newcclosure(function(value)
-    _setclipboard(dump(value))
+    _setclipboard(if typeof(value) == "string" then value else dump(value))
 end)
 
 return {
