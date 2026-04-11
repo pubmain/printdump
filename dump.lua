@@ -61,7 +61,7 @@ function dump(o, tree)
         return '"' ..tostring(o):gsub("[^:a-zA-Z0-9%+%-*/=,./`~ _!@#$%%^&*%(%)]", function(c)
 			local byte = tostring(string.byte(c))
             return "\\" .. ("0"):rep(3 - #byte) .. byte
-        end):gsub("\\10", "\\n") .. '"'
+        end):gsub("\\10", "\\n"):gsub("\"", "\\\"") .. '"'
     elseif typeof(o) == "Instance" then
         return GetInstancePath(o)
 	elseif typeof(o) == "number" then
