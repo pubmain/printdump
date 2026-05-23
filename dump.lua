@@ -1106,6 +1106,10 @@ getgenv().printdump = function(...)
     print(Output)
 end
 
+getgenv().dump = function(value)
+	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):gsub(",\n", ", "):sub(3, -3)
+end
+
 local _setclipboard = setclipboard
 getgenv().setclipboard = function(value)
     if typeof(value) == "string" then
