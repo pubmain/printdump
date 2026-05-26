@@ -1094,7 +1094,7 @@ local Options = {
     Prettify = true
 }
 getgenv().printdump = function(...)
-    local Output = LuaEncode({ ... }, Options):gsub("\n    ", "\n"):gsub(",\n", ", "):sub(3, -3)
+    local Output = LuaEncode({ ... }, Options):gsub("\n    ", "\n"):sub(3, -3)
     if getgenv().redirect_output_to_file then
         appendfile(getgenv().redirect_output_to_file, Output .. "\n")
         return
@@ -1107,7 +1107,7 @@ getgenv().printdump = function(...)
 end
 
 getgenv().dump = function(value)
-	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):gsub(",\n", ", "):sub(3, -3)
+	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):sub(3, -3)
 end
 
 local _setclipboard = setclipboard
