@@ -67,7 +67,7 @@ local GetFullPath; do
         end
 
 
-        local ChildLookupMode = "Index"
+        local ChildLookupMode = getgenv().print_dump_child_lookup_mode or "Index"
 
         local function BuildDynamicAccessor(Expression: string): string
             if ChildLookupMode == "WaitForChild" then
@@ -141,7 +141,7 @@ local GetFullPath; do
                         local FoundIndex = nil
 
                         if
-                            compareinstances(DirectChildPtr, CurrentObject)
+                            not compareinstances(DirectChildPtr, CurrentObject)
                         then
                             for Index, Child in Children do
                                 if not compareinstances(Child, CurrentObject) then
@@ -151,8 +151,6 @@ local GetFullPath; do
                                 FoundIndex = Index
                                 break
                             end
-                        elseif DirectChildPtr ~= CurrentObject then
-                            FoundIndex = table.find(Children, CurrentObject)
                         end
 
                         if FoundIndex then
