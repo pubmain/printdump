@@ -529,10 +529,11 @@ local function LuaEncode(inputTable, options)
 			end
 
 			return string_format(
-				[[function(%s)%s%s%s%s%sreturn%send]],
+				[[function(%s)%s%s%s%s%s%sreturn%send]],
 				`{table_concat(Arguments, ", ")}{VarArg and `{Arguments[1] and ", " or ""}...` or ""}`,
 
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- Name: {FunctionName == "" and "Anonymous Function" or FunctionName} | Line: {Line}`,
+				`{CodegenNewline}{IndentString}{IndentStringBase}-- Address: {tostring(value):gsub("function: ", "")}`,
 
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- {islclosure(value) and `Upvalues: {#debug.getupvalues(
 					value
