@@ -41,10 +41,6 @@ local GetFullPath; do
             return true
         end
 
-        if compareinstances then
-            return compareinstances(Object, ToCompareTo)
-        end
-
         return false
     end
 
