@@ -1111,7 +1111,7 @@ getgenv().printdump_raw = function(output: string)
         appendfile(getgenv().log_output_to_file, output .. "\n")
     end
 
-    print(Output)
+    print(output)
 end
 
 getgenv().dump = function(value)
