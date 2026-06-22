@@ -1102,6 +1102,18 @@ getgenv().printdump = function(...)
     print(Output)
 end
 
+getgenv().printdump_raw = function(output: string)
+    if getgenv().redirect_output_to_file then
+        appendfile(getgenv().redirect_output_to_file, output .. "\n")
+        return
+    end
+    if getgenv().log_output_to_file then
+        appendfile(getgenv().log_output_to_file, output .. "\n")
+    end
+
+    print(Output)
+end
+
 getgenv().dump = function(value)
 	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):sub(3, -3)
 end
@@ -1111,5 +1123,5 @@ getgenv().setclipboard = function(value)
     if typeof(value) == "string" then
         return _setclipboard(value)
     end
-    return _setclipboard(LuaEncode({ value }, Options):gsub("\n    ", "\n"):sub(3, -3))
+    return _setclipboard(dump(value)
 end
