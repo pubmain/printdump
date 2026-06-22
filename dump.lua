@@ -1123,5 +1123,5 @@ getgenv().setclipboard = function(value)
     if typeof(value) == "string" then
         return _setclipboard(value)
     end
-    return _setclipboard(dump(value)
+    return _setclipboard(dump(value))
 end
