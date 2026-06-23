@@ -109,7 +109,7 @@ local GetFullPath; do
             if IsEqualToInstance(CurrentObject, LocalPlayer) then
                 IndexName = ".LocalPlayer"
             elseif
-                LocalPlayer.Character and IsEqualToInstance(CurrentObject, LocalPlayer.Character)
+                LocalPlayer and LocalPlayer.Character and IsEqualToInstance(CurrentObject, LocalPlayer.Character)
             then
                 Path = 'game:GetService("Players").LocalPlayer.Character' .. Path
                 break
