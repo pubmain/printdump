@@ -512,7 +512,38 @@ local function LuaEncode(inputTable, options)
         end
 
         TypeCases["thread"] = function(value)
-			return "task.spawn(function() end)"
+            if not debug.info(value, 0, "f") then
+			    return `task.spawn(function() --[[ C Thread ]] end)`
+            end
+            local Stack = {}
+
+            local Level = 0
+            while true do
+                local Function = debug.info(value, Level, "f")
+                if not Function then
+                    break
+                end
+                Level += 1
+
+                local Str = TypeCases["function"](Function)
+                    :gsub(CodegenNewline, `{CodegenNewline}{IndentStringBase}{IndentStringBase}`)
+                table.insert(Stack, `[{Level}] = {CodegenNewline}{IndentString}{IndentStringBase}{IndentStringBase}{Str}`)
+            end
+
+            local MaxDepth = -1
+            for depth in debug.traceback(value):gmatch("%[(=*)%[") do
+                MaxDepth = math.max(MaxDepth, #depth)
+            end
+
+            return "task.spawn(function()"
+                .. `{CodegenNewline}{IndentString}{IndentStringBase}` .. `-- Status: {coroutine.status(value)}`
+                .. `{CodegenNewline}{IndentString}{IndentStringBase}` .. `--[{string.rep("=", MaxDepth + 1)}[`
+                .. ` Traceback:\n{IndentString}{IndentStringBase}{IndentStringBase}{IndentStringBase}{
+                    debug.traceback(value):gsub("\n", `{CodegenNewline}{IndentString}{IndentStringBase}{IndentStringBase}{IndentStringBase}`):sub(1, -9)
+                }`
+                .. `]{string.rep("=", MaxDepth + 1)}]`
+                .. `{CodegenNewline}{IndentString}{IndentStringBase}` .. `local CallStack = \{{table.concat(Stack, `,`)}{CodegenNewline}{IndentString}{IndentStringBase}}`
+                .. `{CodegenNewline}{IndentString}end)`
 		end
 
         TypeCases["function"] = function(value)
@@ -529,7 +560,7 @@ local function LuaEncode(inputTable, options)
 				`{table_concat(Arguments, ", ")}{VarArg and `{Arguments[1] and ", " or ""}...` or ""}`,
 
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- Name: {FunctionName == "" and "Anonymous Function" or FunctionName} | Line: {Line}`,
-				`{CodegenNewline}{IndentString}{IndentStringBase}-- Source: {TypeCases["string"](debug.info(value, "s"))}`,
+				iscclosure(value) and "" or `{CodegenNewline}{IndentString}{IndentStringBase}-- Source: {TypeCases["string"](debug.info(value, "s"))}`,
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- Address: {tostring(value):gsub("function: ", "")}`,
 
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- {islclosure(value) and `Upvalues: {#debug.getupvalues(
@@ -1091,15 +1122,7 @@ local Options = {
 }
 getgenv().printdump = function(...)
     local Output = LuaEncode({ ... }, Options):gsub("\n    ", "\n"):sub(3, -3)
-    if getgenv().redirect_output_to_file then
-        appendfile(getgenv().redirect_output_to_file, Output .. "\n")
-        return
-    end
-    if getgenv().log_output_to_file then
-        appendfile(getgenv().log_output_to_file, Output .. "\n")
-    end
-
-    print(Output)
+    printdump_raw(Output)
 end
 
 getgenv().printdump_raw = function(output: string)
