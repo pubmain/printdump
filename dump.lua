@@ -113,9 +113,9 @@ local GetFullPath; do
             then
                 Path = 'game:GetService("Players").LocalPlayer.Character' .. Path
                 break
-            elseif CurrentObject.Name and CurrentObject.Name == LocalPlayer.Name then
+            elseif LocalPlayer and CurrentObject.Name and CurrentObject.Name == LocalPlayer.Name then
                 IndexName = BuildDynamicAccessor('game:GetService("Players").LocalPlayer.Name')
-            elseif CurrentObject.Name and CurrentObject.Name == tostring(LocalPlayer.UserId) then
+            elseif LocalPlayer and CurrentObject.Name and CurrentObject.Name == tostring(LocalPlayer.UserId) then
                 IndexName = BuildDynamicAccessor('game:GetService("Players").LocalPlayer.UserId')
             elseif IsEqualToInstance(CurrentObject, workspace) then
                 Path = "workspace" .. Path
