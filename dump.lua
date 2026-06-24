@@ -527,7 +527,7 @@ local function LuaEncode(inputTable, options)
 
                 local Str = TypeCases["function"](Function)
                     :gsub(CodegenNewline, `{CodegenNewline}{IndentStringBase}{IndentStringBase}`)
-                table.insert(Stack, `[{Level}] = {CodegenNewline}{IndentString}{IndentStringBase}{IndentStringBase}{Str}`)
+                table.insert(Stack, `{CodegenNewline}{IndentString}{IndentStringBase}{IndentStringBase}[{Level}] = {Str}`)
             end
 
             local MaxDepth = -1
