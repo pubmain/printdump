@@ -49,6 +49,10 @@ local GetFullPath; do
         VariableName: string?,
         OmitNilFunctionGetterCodeGeneration: boolean?
     }?)
+        if Object.ClassName == "PlayerMouse" then
+            return 'game:GetService("Players").LocalPlayer:GetMouse()'
+        end
+
         local DisableNilParentHandler = options and options.DisableNilParentHandler
         local OmitNilFunctionGetterCodeGeneration = options and options.OmitNilFunctionGetterCodeGeneration
         local VariableName = options and options.VariableName
