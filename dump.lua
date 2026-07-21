@@ -517,7 +517,7 @@ local function LuaEncode(inputTable, options)
 
         TypeCases["thread"] = function(value)
             if not debug.info(value, 0, "f") then
-			    return `task.spawn(function() --[[ C Thread ]] end)`
+			    return `task.spawn(function() --[[ dead thread ]] end)`
             end
             local Stack = {}
 
@@ -527,11 +527,11 @@ local function LuaEncode(inputTable, options)
                 if not Function then
                     break
                 end
-                Level += 1
 
                 local Str = TypeCases["function"](Function)
                     :gsub(CodegenNewline, `{CodegenNewline}{IndentStringBase}{IndentStringBase}`)
                 table.insert(Stack, `{CodegenNewline}{IndentString}{IndentStringBase}{IndentStringBase}[{Level}] = {Str}`)
+                Level += 1
             end
 
             local MaxDepth = -1
