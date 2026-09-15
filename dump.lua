@@ -14,6 +14,13 @@ local GetFullPath; do
         IndentTemplate = string.rep(" ", 4),
     }
 
+    local GetDebugId = coroutine.wrap(function(instance: Instance)
+        while true do
+            setthreadidentity(8)
+            instance = coroutine.yield(instance:GetDebugId())
+        end
+    end)
+
     local LocalPlayer = game:GetService("Players").LocalPlayer
     
     local GetNilCode = [[local function GetNil(Name, DebugId)
@@ -164,7 +171,7 @@ local GetFullPath; do
                         Path = Path .. " --[[Nil Parent]]"
                     else
                         local Base = `GetNil("{CodeGen.FormatLuaString(CurrentObject.Name)}", "{CodeGen.FormatLuaString(
-                            CurrentObject:GetDebugId()
+                            GetDebugId(CurrentObject)
                         )}")`
                         DidInsertNilFunction = true
                         
@@ -1125,7 +1132,7 @@ local Options = {
     Prettify = true
 }
 getgenv().printdump = function(...)
-    local Output = LuaEncode({ ... }, Options):gsub("\n    ", "\n"):sub(3, -3)
+    local Output = LuaEncode({ ... }, Options):gsub("^    ", ""):sub(3, -3)
     printdump_raw(Output)
 end
 
@@ -1142,7 +1149,7 @@ getgenv().printdump_raw = function(output: string)
 end
 
 getgenv().dump = function(value)
-	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):sub(3, -3)
+	return LuaEncode({ value }, Options):gsub("^    ", ""):sub(3, -3)
 end
 
 local _setclipboard = setclipboard
