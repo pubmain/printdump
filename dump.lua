@@ -1132,7 +1132,7 @@ local Options = {
     Prettify = true
 }
 getgenv().printdump = function(...)
-    local Output = LuaEncode({ ... }, Options):gsub("^    ", ""):sub(3, -3)
+    local Output = LuaEncode({ ... }, Options):gsub("\n    ", "\n"):sub(3, -3)
     printdump_raw(Output)
 end
 
@@ -1149,7 +1149,7 @@ getgenv().printdump_raw = function(output: string)
 end
 
 getgenv().dump = function(value)
-	return LuaEncode({ value }, Options):gsub("^    ", ""):sub(3, -3)
+	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):sub(3, -3)
 end
 
 local _setclipboard = setclipboard
