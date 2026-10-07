@@ -1127,12 +1127,26 @@ local function LuaEncode(inputTable, options)
     return table_concat(Output), DidInsertNilFunction
 end
 
-
 local Options = {
     Prettify = true
 }
 getgenv().printdump = function(...)
-    local Output = LuaEncode({ ... }, Options):gsub("\n    ", "\n"):sub(3, -3)
+    local Args = { ... }
+    local Output = LuaEncode(Args, Options):gsub("\n    ", "\n"):sub(Options.Prettify and 3 or 2, Options.Prettify and -3 or -2)
+
+    -- trailing nils
+    for i = 1, select("#", ...) - #Args do
+        if i ~= 1 or #Args ~= 0 then
+            Output ..= ","
+
+            if Options.Prettify then
+                Output ..= "\n"
+            end
+        end
+
+        Output ..= "nil"
+    end
+
     printdump_raw(Output)
 end
 
@@ -1149,7 +1163,7 @@ getgenv().printdump_raw = function(output: string)
 end
 
 getgenv().dump = function(value)
-	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):sub(3, -3)
+	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):sub(Options.Prettify and 3 or 2, Options.Prettify and -3 or -2)
 end
 
 local _setclipboard = setclipboard
