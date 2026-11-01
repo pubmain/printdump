@@ -5,6 +5,8 @@
 --!optimize 2
 --!native
 
+local debug_info = clonefunction(debug.info)
+
 local table, string, next, pcall, game, workspace, tostring, tonumber, getmetatable =
     table, string, next, pcall, game, workspace, tostring, tonumber, getmetatable
 
@@ -523,14 +525,14 @@ local function LuaEncode(inputTable, options)
         end
 
         TypeCases["thread"] = function(value)
-            if not debug.info(value, 0, "f") then
+            if not debug_info(value, 0, "f") then
 			    return `task.spawn(function() --[[ dead thread ]] end)`
             end
             local Stack = {}
 
             local Level = 0
             while true do
-                local Function = debug.info(value, Level, "f")
+                local Function = debug_info(value, Level, "f")
                 if not Function then
                     break
                 end
@@ -559,7 +561,7 @@ local function LuaEncode(inputTable, options)
 
         TypeCases["function"] = function(value)
 			-- We can't serialize functions so we just return a comment block with function information
-			local FunctionName, ArgumentCount, VarArg, Line = debug.info(value, "nal")
+			local FunctionName, ArgumentCount, VarArg, Line = debug_info(value, "nal")
 
 			local Arguments = {}
 			for Index = 1, ArgumentCount do
@@ -571,7 +573,7 @@ local function LuaEncode(inputTable, options)
 				`{table_concat(Arguments, ", ")}{VarArg and `{Arguments[1] and ", " or ""}...` or ""}`,
 
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- Name: {FunctionName == "" and "Anonymous Function" or FunctionName} | Line: {Line}`,
-				iscclosure(value) and "" or `{CodegenNewline}{IndentString}{IndentStringBase}-- Source: {TypeCases["string"](debug.info(value, "s"))}`,
+				iscclosure(value) and "" or `{CodegenNewline}{IndentString}{IndentStringBase}-- Source: {TypeCases["string"](debug_info(value, "s"))}`,
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- Address: {tostring(value):gsub("function: ", "")}`,
 
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- {islclosure(value) and `Upvalues: {#debug.getupvalues(
