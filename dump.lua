@@ -576,9 +576,7 @@ local function LuaEncode(inputTable, options)
 				iscclosure(value) and "" or `{CodegenNewline}{IndentString}{IndentStringBase}-- Source: {TypeCases["string"](debug_info(value, "s"))}`,
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- Address: {tostring(value):gsub("function: ", "")}`,
 
-				`{CodegenNewline}{IndentString}{IndentStringBase}-- {islclosure(value) and `Upvalues: {#debug.getupvalues(
-					value
-				)}` or "Upvalues: N/A (C Closure)"}`,
+				`{CodegenNewline}{IndentString}{IndentStringBase}-- Upvalues: {debug.getinfo(value).nups}`,
 
 				`{CodegenNewline}{IndentString}{IndentStringBase}-- `
 					.. (
