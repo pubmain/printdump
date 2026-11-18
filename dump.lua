@@ -1147,6 +1147,8 @@ getgenv().printdump = function(...)
         Output ..= "nil"
     end
 
+    table.clear(Args)
+
     printdump_raw(Output)
 end
 
@@ -1163,13 +1165,18 @@ getgenv().printdump_raw = function(output: string)
 end
 
 getgenv().dump = function(value)
-	return LuaEncode({ value }, Options):gsub("\n    ", "\n"):sub(Options.Prettify and 3 or 2, Options.Prettify and -3 or -2)
+    local Args = { value }
+	local Str = LuaEncode(Args, Options):gsub("\n    ", "\n"):sub(Options.Prettify and 3 or 2, Options.Prettify and -3 or -2)
+	Args[1] = nil
+
+	return Str
 end
 
 local _setclipboard = setclipboard
 getgenv().setclipboard = function(value)
-    if typeof(value) == "string" then
+    if type(value) == "string" then
         return _setclipboard(value)
     end
+    
     return _setclipboard(dump(value))
 end
